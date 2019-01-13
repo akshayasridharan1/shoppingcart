@@ -1,7 +1,9 @@
 package com.jpaexample.demo.project.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "user")
@@ -14,7 +16,8 @@ public class User {
 
     private String userName;
 
-    private LocalDateTime createdDateTime;
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    private Date date;
 
     public Long getUserId() {
         return userId;
@@ -32,11 +35,11 @@ public class User {
         this.userName = userName;
     }
 
-    public LocalDateTime getCreatedDateTime() {
-        return createdDateTime;
+    public Date getDate() {
+        return date;
     }
 
-    public void setCreatedDateTime(LocalDateTime createdDateTime) {
-        this.createdDateTime = createdDateTime;
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
