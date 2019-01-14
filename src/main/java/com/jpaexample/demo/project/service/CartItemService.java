@@ -22,8 +22,10 @@ public class CartItemService {
 
     public CartItem findByItemIdAndCartId(Long itemId,Long cartId)
     {
-        CartItem cartItem = Optional.ofNullable(cartItemRepository.findByItemItemIdAndCartCartId(itemId,cartId))
+        /*CartItem cartItem = Optional.ofNullable(cartItemRepository.findByItemItemIdAndCartCartId(itemId,cartId))
                             .orElseThrow(()-> new ResourceNotFoundException("Cart Item not found for Item ID:"+itemId +"and Cart ID:"+cartId));
+    */
+        CartItem cartItem = cartItemRepository.findByItemItemIdAndCartCartId(itemId,cartId);
         return cartItem;
     }
 

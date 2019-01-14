@@ -33,13 +33,13 @@ public class CartItemController {
 
        Cart cart = cartService.findById(cartId);
        Item item = itemService.findByItemName(itemName);
-      /* CartItem cartItem1 = checkIfItemAlreadyExistsInCart(item.getItemId(),cartId);
+       CartItem cartItem1 = checkIfItemAlreadyExistsInCart(item.getItemId(),cartId);
        if(Optional.ofNullable(cartItem1).isPresent())
        {
            cartItem.setCartItemId(cartId);
            cartItem.setItemQty(cartItem1.getItemQty() + cartItem.getItemQty());
        }
-*/
+
        cartItem.setCart(cart);
        cartItem.setItem(item);
        CartItem cartItemObj= cartItemService.addItemsToCart(cartItem);
@@ -49,10 +49,10 @@ public class CartItemController {
        return new ResponseEntity<>(cartItemObj, HttpStatus.CREATED);
     }
 
-    /*public CartItem checkIfItemAlreadyExistsInCart (Long itemId,Long cartId)
+    public CartItem checkIfItemAlreadyExistsInCart (Long itemId,Long cartId)
     {
 
        return cartItemService.findByItemIdAndCartId(itemId,cartId);
 
-    }*/
+    }
 }

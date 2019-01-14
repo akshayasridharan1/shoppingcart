@@ -1,6 +1,6 @@
 package com.jpaexample.demo.project.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -20,16 +20,25 @@ public class Cart {
     @OneToMany(mappedBy ="cart",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<CartItem> cartItemList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "taxId")
+    private Tax tax;
+
     private int totalCartQty;
+
+    private BigDecimal totalTaxAmount;
 
     private BigDecimal totalCartPrice;
 
     public Cart() {
     }
 
-    public Cart(List<CartItem> cartItemList, int totalCartQty, BigDecimal totalCartPrice) {
+    public Cart(List<CartItem> cartItemList, Tax tax, int totalCartQty, BigDecimal totalTaxAmount, BigDecimal totalCartPrice) {
         this.cartItemList = cartItemList;
+        this.tax = tax;
         this.totalCartQty = totalCartQty;
+        this.totalTaxAmount = totalTaxAmount;
         this.totalCartPrice = totalCartPrice;
     }
 
@@ -69,16 +78,41 @@ public class Cart {
 
     public BigDecimal getTotalCartPrice() {
 
-       /* BigDecimal sum = BigDecimal.ZERO;
-        List<CartItem> cartItem = getCartItemList();
-        for(CartItem cartItemObj: cartItemList){
-            sum.add(cartItemObj.getTotalPrice());
-        }
-        return sum;*/
-    return cartItemList.stream().map(CartItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal cartTotalPrice =  cartItemList.stream().map(CartItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return cartTotalPrice.add(getTotalTaxAmount());
+
     }
 
     public void setTotalCartPrice(BigDecimal totalCartPrice) {
         this.totalCartPrice = totalCartPrice;
     }
+
+  /*  public BigDecimal getTotalTaxAmount() {
+        return cartItemList.stream().map(CartItem::getTotalPrice).reduce(new BigDecimal(0.125), BigDecimal::multiply);
+    }
+
+    */
+
+    public Tax getTax() {
+        return tax;
+    }
+
+    public void setTax(Tax tax) {
+        this.tax = tax;
+    }
+
+    public BigDecimal getTotalTaxAmount() {
+        //return totalTaxAmount;
+        return cartItemList.stream().map(CartItem::getTotalPrice).reduce(getTax().getTaxRate(), BigDecimal::multiply);
+
+    }
+
+    public void setTotalTaxAmount(BigDecimal totalTaxAmount) {
+        this.totalTaxAmount = totalTaxAmount;
+    }
 }
+
+
+
+

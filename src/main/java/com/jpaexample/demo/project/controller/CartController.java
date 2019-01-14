@@ -17,8 +17,7 @@ public class CartController {
     @PostMapping("/create")
     public ResponseEntity<Cart> CreateEmptyCart()
     {
-        Cart cart = new Cart();
-        Cart cartObj = cartService.createCart(cart);
+        Cart cartObj = cartService.createCart();
         return new ResponseEntity<>(cartObj, HttpStatus.CREATED);
     }
 
